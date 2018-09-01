@@ -59,7 +59,7 @@ end
 
 def streaming
     @client_Stream.filter(follow:arrayToCSV(@followers)) do |tweet|
-        if tweet.is_a?(Twitter::Tweet) &&tweet.user,id != @my_id
+        if tweet.is_a?(Twitter::Tweet) &&tweet.user.id != @my_id
             puts "\e[33m" + tweet.user.name + "\e[32m" + "[ID:" + tweet.user.screen_name + "]"
             puts "\e[0m" + tweet.text
             
@@ -73,9 +73,9 @@ def streaming
                 @client.update("@#{tweet.user.screen_name}\nバイトおつかれさま！！今日もがんばったね！！", options = {:in_reply_to_status_id => tweet.id})
             end
         end
-    end
-    
+    end 
 end
+
 fork do
     loop do
         homeTimeline_REST
