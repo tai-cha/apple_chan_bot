@@ -156,8 +156,8 @@ def responseToTweet (tweet)
             @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenThanks, options = {:in_reply_to_status_id => tweet.id})
         elsif tweet.text.include?("聞いて") ||tweet.text.include?("きいて")
             @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("の天気")
-            @client.update("@#{tweet.user.screen_name}\n"+WeatherJp.parse(tweet.text.delete(@apple_chan_bot)).to_s, options = {:in_reply_to_status_id => tweet.id})
+        elsif tweet.text.include?("の天気") && tweet.text.delete("@apple_chan_bot") != nil
+            @client.update("@#{tweet.user.screen_name}\n"+WeatherJp.parse(tweet.text.delete("@apple_chan_bot")).to_s, options = {:in_reply_to_status_id => tweet.id})
         else
             @client.update("@#{tweet.user.screen_name}\n"+randomWordsToReply, options = {:in_reply_to_status_id => tweet.id})
         end
