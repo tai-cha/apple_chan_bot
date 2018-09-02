@@ -21,7 +21,7 @@ end
 
 def randomWordsWhenCalled
     random = Random.new()
-    num = random.rand(0,5)
+    num = random.rand(0..5)
     case num
     when 0
         return "どうしたの〜〜？？"
@@ -40,7 +40,7 @@ end
 
 def randomWordsToReply
     random = Random.new()
-    num = random.rand(0,10)
+    num = random.rand(0..10)
     case num
     when 0
         return "そうだよねー"
