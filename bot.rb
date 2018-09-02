@@ -1,5 +1,4 @@
 require 'twitter'
-require 'weather_jp'
 
 @last_tweet_id_REST = [(ENV['REST_last_tweet']).to_i, 1].max
 @my_id = 1004213238379130880
@@ -150,14 +149,12 @@ def responseToTweet (tweet)
     elsif tweet.text.include?("りんごちゃん")
         @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.in_reply_to_user_id == @my_id
-        if tweet.text.include?("好き")
+        if tweet.text.include?("好き")||tweet.text.include?("すき")
             @client.update("@#{tweet.user.screen_name}\n"+randomWordsLike, options = {:in_reply_to_status_id => tweet.id})
         elsif tweet.text.include?("ありがと")
             @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenThanks, options = {:in_reply_to_status_id => tweet.id})
         elsif tweet.text.include?("聞いて") ||tweet.text.include?("きいて")
             @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("の天気") && tweet.text.delete("@apple_chan_bot") != nil
-            @client.update("@#{tweet.user.screen_name}\n"+WeatherJp.parse(tweet.text.delete("@apple_chan_bot")).to_s, options = {:in_reply_to_status_id => tweet.id})
         else
             @client.update("@#{tweet.user.screen_name}\n"+randomWordsToReply, options = {:in_reply_to_status_id => tweet.id})
         end
