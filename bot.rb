@@ -1,6 +1,6 @@
 require 'twitter'
 
-@last_tweet_id_REST = [ENV['REST_last_tweet'].to_i, 1].max
+@last_tweet_id_REST = [(ENV['REST_last_tweet']).to_i, 1].max
 @my_id = 1004213238379130880
 
 @client = Twitter::REST::Client.new do |config|
@@ -108,7 +108,7 @@ def homeTimeline_REST
     tl_tweets.reverse.each_with_index do |tweet, index|
         if index == tl_tweets.size - 1
             @last_tweet_id_REST = tweet.id
-            ENV['REST_last_tweet'] = @last_tweet_id_REST.to_i
+            ENV['REST_last_tweet'] = @last_tweet_id_REST.to_s
         end
         if tweet.user.protected?
             responseToTweet(tweet)
