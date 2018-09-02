@@ -67,6 +67,19 @@ def randomWordsToReply
     end
 end
 
+def randomWordsSleepy
+    random = Random.new()
+    num = random.rand(0..2)
+    case num
+    when 0
+        return "おやすみなさい！！"
+    when 1
+        return "無理はしないでね！！"
+    when 2
+        return "はやく寝なよ！！"
+    end
+end
+
 def responseToTweet (tweet)
     puts "\e[33m" + tweet.user.name + "\e[32m" + "[ID:" + tweet.user.screen_name + "]"
     puts "\e[0m" + tweet.text
@@ -75,6 +88,12 @@ def responseToTweet (tweet)
         @client.update("@#{twet.user.screen_name}\n1限9:00-10:30\n2限10:45-12:15\n3限13:05-14:35\n4限14:50-16:20\n5限16:35-18:05\nですよ〜〜！！", options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.text.include?("ば終わ") || tweet.text.include?("バおわ")||tweet.text.include?("バオワ")||tweet.text.include?("ばおわ")
         @client.update("@#{tweet.user.screen_name}\nバイトおつかれさま！！今日もがんばったね！！", options = {:in_reply_to_status_id => tweet.id})
+    elsif tweet.text.include?("ねむい") || tweet.text.include?("眠い")
+        @client.update("@#{tweet.user.screen_name}\n"+randomWordsSleepy, options = {:in_reply_to_status_id => tweet.id})
+    elsif tweet.text.include?("つかれた") || tweet.text.include?("疲れた")
+        @client.update("@#{tweet.user.screen_name}\n今日もお疲れ様！！", options = {:in_reply_to_status_id => tweet.id})
+    elsif tweet.text.include?("ちんちん") || tweet.text.include?("おっぱい") || tweet.text.include?("ちんこ") || tweet.text.include?("まんこ")
+        @client.update("@#{tweet.user.screen_name}\nセクハラはよくないと思います……", options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.text.include?("りんごちゃん")
         @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.in_reply_to_user_id == @my_id
