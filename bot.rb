@@ -94,6 +94,8 @@ def responseToTweet (tweet)
         @client.update("@#{tweet.user.screen_name}\n今日もお疲れ様！！", options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.text.include?("ちんちん") || tweet.text.include?("おっぱい") || tweet.text.include?("ちんこ") || tweet.text.include?("まんこ")
         @client.update("@#{tweet.user.screen_name}\nセクハラはよくないと思います……", options = {:in_reply_to_status_id => tweet.id})
+    elsif tweet.text.include?("進捗ダメ") || tweet.text.include?("進捗ありません") || tweet.text.include?("進捗ない")
+        @client.update("@#{tweet.user.screen_name}\n明日は進捗出るよ！頑張って！！", options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.text.include?("りんごちゃん")
         @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.in_reply_to_user_id == @my_id
