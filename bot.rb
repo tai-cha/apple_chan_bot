@@ -1,6 +1,6 @@
 require 'twitter'
 
-@last_tweet_id_REST = 1
+@last_tweet_id_REST = [ENV['REST_last_tweet'].to_i, 1].max
 @my_id = 1004213238379130880
 
 @client = Twitter::REST::Client.new do |config|
@@ -72,7 +72,7 @@ def responseToTweet (tweet)
     puts "\e[0m" + tweet.text
     
     if tweet.text.include?("限何時")
-        @client.update("@#{tweet.user.screen_name}\n1限9:00-10:30\n2限10:45-12:15\n3限13:05-14:35\n4限14:50-16:20\n5限16:35-18:05\nですよ〜〜！！", options = {:in_reply_to_status_id => tweet.id})
+        @client.update("@#{twet.user.screen_name}\n1限9:00-10:30\n2限10:45-12:15\n3限13:05-14:35\n4限14:50-16:20\n5限16:35-18:05\nですよ〜〜！！", options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.text.include?("ば終わ") || tweet.text.include?("バおわ")||tweet.text.include?("バオワ")||tweet.text.include?("ばおわ")
         @client.update("@#{tweet.user.screen_name}\nバイトおつかれさま！！今日もがんばったね！！", options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.text.include?("りんごちゃん")
@@ -87,6 +87,7 @@ def homeTimeline_REST
     tl_tweets.reverse.each_with_index do |tweet, index|
         if index == tl_tweets.size - 1
             @last_tweet_id_REST = tweet.id
+            ENV['REST_last_tweet'] = @last_tweet_id_REST.to_i
         end
         if tweet.user.protected?
             responseToTweet(tweet)
