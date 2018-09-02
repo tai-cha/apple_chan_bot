@@ -139,9 +139,9 @@ def responseToTweet (tweet)
         num = random.rand(0..1)
         case num
         when 0
-            return "いいよ！！おやすみ！！"
+            @client.update("@#{tweet.user.screen_name}\nいいよ！！おやすみ！！", options = {:in_reply_to_status_id => tweet.id})
         when 1
-            return "ダメだよ！！おきて！！"
+            @client.update("@#{tweet.user.screen_name}\nダメだよ！！おきて！！", options = {:in_reply_to_status_id => tweet.id})
         end
     elsif tweet.text.include?("こんにちは")
         @client.update("@#{tweet.user.screen_name}\nこんにちは！！", options = {:in_reply_to_status_id => tweet.id})
