@@ -134,6 +134,15 @@ def responseToTweet (tweet)
         @client.update("@#{tweet.user.screen_name}\nバイトおつかれさま！！今日もがんばったね！！", options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.text.include?("おはよう")|| tweet.text.include?("いまおきた")|| tweet.text.include?("今起きました")|| tweet.text.include?("いまおきました")
         @client.update("@#{tweet.user.screen_name}\nおはよう！！", options = {:in_reply_to_status_id => tweet.id})
+    elsif tweet.text.include?("ねていい？")|| tweet.text.include?("ねていい?")
+        random = Random.new()
+        num = random.rand(0..1)
+        case num
+        when 0
+            return "いいよ！！おやすみ！！"
+        when 1
+            return "ダメだよ！！おきて！！"
+        end
     elsif tweet.text.include?("こんにちは")
         @client.update("@#{tweet.user.screen_name}\nこんにちは！！", options = {:in_reply_to_status_id => tweet.id})
     elsif tweet.text.include?("ねむい") || tweet.text.include?("眠い")
