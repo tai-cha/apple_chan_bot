@@ -125,7 +125,7 @@ def randomWordsWhenThanks
 end
 
 def responseToTweet (tweet)
-    if !tweet.retweeted
+    if !tweet.retweeted?
         puts "\e[33m" + tweet.user.name + "\e[32m" + "[ID:" + tweet.user.screen_name + "]"
         puts "\e[0m" + tweet.text
         if (!tweet.text.include?("@") || tweet.text.include?("@apple_chan_bot"))
