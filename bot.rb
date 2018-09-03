@@ -171,6 +171,7 @@ def responseToTweet (tweet)
         elsif tweet.text.include?("りんごちゃん")
             @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
         elsif tweet.in_reply_to_user_id == @my_id
+            @client.favorite(tweet, options={})
             if tweet.text.include?("好き")||tweet.text.include?("すき")
                 @client.update("@#{tweet.user.screen_name}\n"+randomWordsLike, options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.text.include?("ありがと")
