@@ -125,61 +125,63 @@ def randomWordsWhenThanks
 end
 
 def responseToTweet (tweet)
-    puts "\e[33m" + tweet.user.name + "\e[32m" + "[ID:" + tweet.user.screen_name + "]"
-    puts "\e[0m" + tweet.text
-    if !tweet.text.include?("@") || tweet.text.include?("@apple_chan_bot")
-        
-        if tweet.text.include?("限何時")
-            @client.update("@#{tweet.user.screen_name}\n1限9:00-10:30\n2限10:45-12:15\n3限13:05-14:35\n4限14:50-16:20\n5限16:35-18:05\nですよ〜〜！！", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("ば終わ") || tweet.text.include?("バおわ")||tweet.text.include?("バオワ")||tweet.text.include?("ばおわ")
-            @client.update("@#{tweet.user.screen_name}\nバイトおつかれさま！！今日もがんばったね！！", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("おはよう")|| tweet.text.include?("いまおきた")|| tweet.text.include?("今起きました")|| tweet.text.include?("いまおきました")
-            @client.update("@#{tweet.user.screen_name}\nおはよう！！", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("ねていい？")|| tweet.text.include?("ねていい?")
-            random = Random.new()
-            num = random.rand(0..1)
-            case num
-            when 0
-                @client.update("@#{tweet.user.screen_name}\nいいよ！！おやすみ！！", options = {:in_reply_to_status_id => tweet.id})
-            when 1
-                @client.update("@#{tweet.user.screen_name}\nダメだよ！！おきて！！", options = {:in_reply_to_status_id => tweet.id})
-            end
-        elsif tweet.text.include?("こんにちは")
-            @client.update("@#{tweet.user.screen_name}\nこんにちは！！", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("ねむい") || tweet.text.include?("眠い")
-            @client.update("@#{tweet.user.screen_name}\n"+randomWordsSleepy, options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("おやすみ")
-            @client.update("@#{tweet.user.screen_name}\nおやすみ〜〜〜", options = {:in_reply_to_status_id => tweet.id})    
-        elsif tweet.text.include?("絶起")
-            @client.update("@#{tweet.user.screen_name}\nちゃんと起きましょうね！！！", options = {:in_reply_to_status_id => tweet.id})  
-        elsif tweet.text.include?("魔剤")
-            @client.update("@#{tweet.user.screen_name}\n美味しいけど飲み過ぎには注意ですよ！", options = {:in_reply_to_status_id => tweet.id})  
-        elsif tweet.text.include?("1限チャレンジ") || tweet.text.include?("一限チャレンジ")
-            @client.update("@#{tweet.user.screen_name}\nまたギリギリですか？ちゃんと学校間に合ってくださいよ？", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("つかれた") || tweet.text.include?("疲れた")
-            @client.update("@#{tweet.user.screen_name}\n今日もお疲れ様！！", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("頑張る") || tweet.text.include?("がんばる")
-            @client.update("@#{tweet.user.screen_name}\nがんばれ！！ファイトーーー！！", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("ちんちん") || tweet.text.include?("おっぱい") || tweet.text.include?("ちんこ") || tweet.text.include?("まんこ")
-            @client.update("@#{tweet.user.screen_name}\nセクハラはよくないと思います……", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("進捗ダメ") || tweet.text.include?("進捗ありません") || tweet.text.include?("進捗ない")
-            @client.update("@#{tweet.user.screen_name}\n明日は進捗出るよ！頑張って！！", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("バ行")
-            @client.update("@#{tweet.user.screen_name}\nバイト頑張ってください！", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("課題終わった")|| tweet.text.include?("課題おわった")
-            @client.update("@#{tweet.user.screen_name}\nおつかれさま！！今日はゆっくり寝よう〜〜！", options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.text.include?("りんごちゃん")
-            @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
-        elsif tweet.in_reply_to_user_id == @my_id
-            @client.favorite(tweet, options={})
-            if tweet.text.include?("好き")||tweet.text.include?("すき")
-                @client.update("@#{tweet.user.screen_name}\n"+randomWordsLike, options = {:in_reply_to_status_id => tweet.id})
-            elsif tweet.text.include?("ありがと")
-                @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenThanks, options = {:in_reply_to_status_id => tweet.id})
-            elsif tweet.text.include?("聞いて") ||tweet.text.include?("きいて")
+    if !tweet.retweeted
+        puts "\e[33m" + tweet.user.name + "\e[32m" + "[ID:" + tweet.user.screen_name + "]"
+        puts "\e[0m" + tweet.text
+        if (!tweet.text.include?("@") || tweet.text.include?("@apple_chan_bot"))
+            
+            if tweet.text.include?("限何時")
+                @client.update("@#{tweet.user.screen_name}\n1限9:00-10:30\n2限10:45-12:15\n3限13:05-14:35\n4限14:50-16:20\n5限16:35-18:05\nですよ〜〜！！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("ば終わ") || tweet.text.include?("バおわ")||tweet.text.include?("バオワ")||tweet.text.include?("ばおわ")
+                @client.update("@#{tweet.user.screen_name}\nバイトおつかれさま！！今日もがんばったね！！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("おはよう")|| tweet.text.include?("いまおきた")|| tweet.text.include?("今起きました")|| tweet.text.include?("いまおきました")
+                @client.update("@#{tweet.user.screen_name}\nおはよう！！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("ねていい？")|| tweet.text.include?("ねていい?")
+                random = Random.new()
+                num = random.rand(0..1)
+                case num
+                when 0
+                    @client.update("@#{tweet.user.screen_name}\nいいよ！！おやすみ！！", options = {:in_reply_to_status_id => tweet.id})
+                when 1
+                    @client.update("@#{tweet.user.screen_name}\nダメだよ！！おきて！！", options = {:in_reply_to_status_id => tweet.id})
+                end
+            elsif tweet.text.include?("こんにちは")
+                @client.update("@#{tweet.user.screen_name}\nこんにちは！！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("ねむい") || tweet.text.include?("眠い")
+                @client.update("@#{tweet.user.screen_name}\n"+randomWordsSleepy, options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("おやすみ")
+                @client.update("@#{tweet.user.screen_name}\nおやすみ〜〜〜", options = {:in_reply_to_status_id => tweet.id})    
+            elsif tweet.text.include?("絶起")
+                @client.update("@#{tweet.user.screen_name}\nちゃんと起きましょうね！！！", options = {:in_reply_to_status_id => tweet.id})  
+            elsif tweet.text.include?("魔剤")
+                @client.update("@#{tweet.user.screen_name}\n美味しいけど飲み過ぎには注意ですよ！", options = {:in_reply_to_status_id => tweet.id})  
+            elsif tweet.text.include?("1限チャレンジ") || tweet.text.include?("一限チャレンジ")
+                @client.update("@#{tweet.user.screen_name}\nまたギリギリですか？ちゃんと学校間に合ってくださいよ？", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("つかれた") || tweet.text.include?("疲れた")
+                @client.update("@#{tweet.user.screen_name}\n今日もお疲れ様！！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("頑張る") || tweet.text.include?("がんばる")
+                @client.update("@#{tweet.user.screen_name}\nがんばれ！！ファイトーーー！！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("ちんちん") || tweet.text.include?("おっぱい") || tweet.text.include?("ちんこ") || tweet.text.include?("まんこ")
+                @client.update("@#{tweet.user.screen_name}\nセクハラはよくないと思います……", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("進捗ダメ") || tweet.text.include?("進捗ありません") || tweet.text.include?("進捗ない")
+                @client.update("@#{tweet.user.screen_name}\n明日は進捗出るよ！頑張って！！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("バ行")
+                @client.update("@#{tweet.user.screen_name}\nバイト頑張ってください！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("課題終わった")|| tweet.text.include?("課題おわった")
+                @client.update("@#{tweet.user.screen_name}\nおつかれさま！！今日はゆっくり寝よう〜〜！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("りんごちゃん")
                 @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
-            else
-                @client.update("@#{tweet.user.screen_name}\n"+randomWordsToReply, options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.in_reply_to_user_id == @my_id
+                @client.favorite(tweet, options={})
+                if tweet.text.include?("好き")||tweet.text.include?("すき")
+                    @client.update("@#{tweet.user.screen_name}\n"+randomWordsLike, options = {:in_reply_to_status_id => tweet.id})
+                elsif tweet.text.include?("ありがと")
+                    @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenThanks, options = {:in_reply_to_status_id => tweet.id})
+                elsif tweet.text.include?("聞いて") ||tweet.text.include?("きいて")
+                    @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
+                else
+                    @client.update("@#{tweet.user.screen_name}\n"+randomWordsToReply, options = {:in_reply_to_status_id => tweet.id})
+                end
             end
         end
     end
