@@ -221,17 +221,13 @@ def streaming
         if tweet.is_a?(Twitter::Tweet) && tweet.user.id != @my_id
             responseToTweet(tweet)
         end
-        if @followers != ENV['followers'].to_h && ENV['followers'] != nil
-            @followers = ENV['followers'].to_h
-            exit!
-        end
     end 
 end
 
-fork do
+rest_thread = Thread.start {
     loop do
         homeTimeline_REST
     end
-end
+}
 
 streaming
