@@ -199,6 +199,7 @@ def homeTimeline_REST
         end
     end
     @followers = @client.follower_ids(@my_id).take(7500)
+    ENV['followers'] = @followers.to_s
     sleep(60)
 end
 
@@ -218,6 +219,11 @@ def streaming
     @client_Stream.filter(follow:arrayToCSV(@followers)) do |tweet|
         if tweet.is_a?(Twitter::Tweet) && tweet.user.id != @my_id
             responseToTweet(tweet)
+        end
+        if @followers != ENV['followers'].to_h && ENV['followers'] != nil
+            @followers = ENV['followers'].to_h
+            break
+            break
         end
     end 
 end
