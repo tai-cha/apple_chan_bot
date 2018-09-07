@@ -18,6 +18,7 @@ end
 end
 
 @followers = @client.follower_ids(@my_id).take(7500)
+ENV['followers'] = @followers.to_s
 
 def randomWordsWhenCalled
     random = Random.new()
@@ -198,9 +199,9 @@ def homeTimeline_REST
             responseToTweet(tweet)
         end
     end
+    sleep(60)
     @followers = @client.follower_ids(@my_id).take(7500)
     ENV['followers'] = @followers.to_s
-    sleep(60)
 end
 
 def arrayToCSV (array)
@@ -222,8 +223,7 @@ def streaming
         end
         if @followers != ENV['followers'].to_h && ENV['followers'] != nil
             @followers = ENV['followers'].to_h
-            break
-            break
+            exit!
         end
     end 
 end
