@@ -10,15 +10,21 @@ require 'twitter'
     config.access_token_secret = "0SWuWZjTK0xsaKF8rvEAduwlsJlyzcpvWHqYgp8Y1zYnU"
 end
 
-@client_Stream = Twitter::Streaming::Client.new do |config|
-    config.consumer_key        = "86tasAy3Cj8XToGE5L29opna3"
-    config.consumer_secret     = "rfdrTfp5pgMmRd4OWXvCQ2UWD1i8lDEgjaqGVnJolKZUoZZJdy"
-    config.access_token        = "1004213238379130880-G4HBMAy0Pb16JjskoR48KV7y4XJS9y"
-    config.access_token_secret = "0SWuWZjTK0xsaKF8rvEAduwlsJlyzcpvWHqYgp8Y1zYnU"
+created_NewStreamingClient = false
+
+def createNewStreamingClient
+    @client_Stream = Twitter::Streaming::Client.new do |config|
+        config.consumer_key        = "86tasAy3Cj8XToGE5L29opna3"
+        config.consumer_secret     = "rfdrTfp5pgMmRd4OWXvCQ2UWD1i8lDEgjaqGVnJolKZUoZZJdy"
+        config.access_token        = "1004213238379130880-G4HBMAy0Pb16JjskoR48KV7y4XJS9y"
+        config.access_token_secret = "0SWuWZjTK0xsaKF8rvEAduwlsJlyzcpvWHqYgp8Y1zYnU"
+    end
+    created_NewStreamingClient = true
 end
 
+createNewStreamingClient
+
 @followers = @client.follower_ids(@my_id).take(7500)
-ENV['followers'] = @followers.to_s
 
 def randomWordsWhenCalled
     random = Random.new()
@@ -126,7 +132,7 @@ def randomWordsWhenThanks
 end
 
 def responseToTweet (tweet)
-    if !tweet.retweeted?
+    if !tweet.retweeted? && !tweet.text.include?("RT @")
         puts "\e[33m" + tweet.user.name + "\e[32m" + "[ID:" + tweet.user.screen_name + "]"
         puts "\e[0m" + tweet.text
         if (!tweet.text.include?("@") || tweet.text.include?("@apple_chan_bot"))
@@ -195,13 +201,18 @@ def homeTimeline_REST
             @last_tweet_id_REST = tweet.id
             ENV['REST_last_tweet'] = @last_tweet_id_REST.to_s
         end
-        if tweet.user.protected?
-            responseToTweet(tweet)
-        end
+        responseToTweet(tweet)
+        # if tweet.user.protected?
+        #     responseToTweet(tweet)
+        # end
     end
     sleep(60)
     @followers = @client.follower_ids(@my_id).take(7500)
-    ENV['followers'] = @followers.to_s
+    puts "got followers."
+    File.open('followers.txt',"w") do |file|
+        file.print(@followers)
+        file.close
+    end
 end
 
 def arrayToCSV (array)
@@ -216,18 +227,51 @@ def arrayToCSV (array)
     return objs
 end
 
-def streaming
-    @client_Stream.filter(follow:arrayToCSV(@followers)) do |tweet|
-        if tweet.is_a?(Twitter::Tweet) && tweet.user.id != @my_id
-            responseToTweet(tweet)
-        end
-    end 
+def isFollowersDiff ()
+    if File.read('followers.txt')[2..-2].split(", ").map(&:to_i) == @followers
+        return false
+    else
+        @followers = File.read('followers.txt')[2..-2].split(", ").map(&:to_i)
+        return true
+    end
 end
 
-rest_thread = Thread.start {
+def streaming
+    begin
+        @client_Stream.filter(follow:arrayToCSV(@followers)) do |tweet|
+            if tweet.is_a?(Twitter::Tweet) && tweet.user.id != @my_id
+                responseToTweet(tweet)
+            end
+            if isFollowersDiff()
+                puts "followers changed"
+                break
+                return 0
+            end
+        end
+        puts "処理切った"
+        return 0
+    rescue => error
+        puts "エラーが起きました"
+        puts error.message
+        puts ""
+        if error.message.include?("765: ")
+            sleep(5)
+        end
+    end
+end
+
+@pid = fork do
     loop do
         homeTimeline_REST
     end
-}
+end
 
-streaming
+# loop do
+#     puts "ストリーミング始めるよ"
+#     created_NewStreamingClient
+#     streaming
+# end
+
+at_exit do
+    system("kill #{@pid}")
+end
