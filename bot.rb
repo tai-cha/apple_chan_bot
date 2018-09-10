@@ -260,10 +260,14 @@ def streaming
     end
 end
 
-@pid = fork do
-    loop do
-        homeTimeline_REST
-    end
+# @pid = fork do
+#     loop do
+#         homeTimeline_REST
+#     end
+# end
+
+loop do
+    homeTimeline_REST
 end
 
 # loop do
@@ -272,6 +276,6 @@ end
 #     streaming
 # end
 
-at_exit do
-    system("kill #{@pid}")
-end
+# at_exit do
+#     system("kill #{@pid}")
+# end
