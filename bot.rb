@@ -15,9 +15,9 @@ end
     config.access_token_secret = "0SWuWZjTK0xsaKF8rvEAduwlsJlyzcpvWHqYgp8Y1zYnU"
 end
 
-def randomFromArray(Array)
+def randomFromArray(array)
     random = Random.new()
-    return strs[random.rand(0..(strs.length - 1))]
+    return array[random.rand(0..(strs.length - 1))]
 end
 
 def randomWordsWhenCalled
