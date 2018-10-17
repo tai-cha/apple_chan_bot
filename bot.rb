@@ -62,7 +62,7 @@ def responseToTweet (tweet)
             elsif tweet.text == "ぽ"
                 currentTime = Time.now.localtime("+09:00")
                 currentHour = currentTime.strftime("%H").to_i
-                if(currentHour < 4, currentHour >= 17)
+                if(currentHour < 4 || currentHour >= 17)
                     @client.update("@#{tweet.user.screen_name}\nおやすみ！！", options = {:in_reply_to_status_id => tweet.id})
                 else
                     @client.update("@#{tweet.user.screen_name}\nおはよう！！", options = {:in_reply_to_status_id => tweet.id})
