@@ -17,7 +17,7 @@ end
 
 def randomFromArray(array)
     random = Random.new()
-    return array[random.rand(0..(strs.length - 1))]
+    return array[random.rand(0..(array.length - 1))]
 end
 
 def randomWordsWhenCalled
