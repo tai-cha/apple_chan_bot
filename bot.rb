@@ -1,11 +1,5 @@
 require 'twitter'
 
-if File.exist?('followers.txt')
-    @last_tweet_id_REST = [(File.read('followers.txt')).to_i, 1].max
-else
-    @last_tweet_id_REST = 1
-end
-
 @my_id = 1004213238379130880
 
 @client = Twitter::REST::Client.new do |config|
@@ -46,6 +40,7 @@ def randomWordsWhenThanks
 end
 
 def responseToTweet (tweet)
+    ENV['LAST_TWEET_ID'] = tweet.id.to_s
     if !tweet.retweeted? && !tweet.text.include?("RT @")
         puts "\e[33m" + tweet.user.name + "\e[32m" + "[ID:" + tweet.user.screen_name + "]"
         puts "\e[0m" + tweet.text
@@ -127,24 +122,16 @@ def responseToTweet (tweet)
 end
 
 def homeTimeline_REST
-    tl_tweets= @client.home_timeline(count: 200,since_id: @last_tweet_id_REST)
+    tl_tweets= @client.home_timeline(count: 200,since_id: ENV['LAST_TWEET_ID'].to_i )
     tl_tweets.reverse.each_with_index do |tweet, index|
         if index == tl_tweets.size - 1
-            @last_tweet_id_REST = tweet.id
-            File.open('last_tweet_id.txt',"w") do |file|
-                file.print(@last_tweet_id_REST.to_s)
-                file.close
-            end
+            ENV['LAST_TWEET_ID'] = tweet.id.to_s
         end
         responseToTweet(tweet)
     end
     sleep(60)
     @followers = @client.follower_ids(@my_id).take(7500)
-    puts "got followers."
-    File.open('followers.txt',"w") do |file|
-        file.print(@followers)
-        file.close
-    end
+    
 end
 
 loop do
