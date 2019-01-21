@@ -96,9 +96,9 @@ def responseToTweet (tweet)
                 random = Random.new()
                 num = random.rand(0..100)
                 case num
-                when 0
+                when 0..30
                     @client.update("@#{tweet.user.screen_name}\nそ、そんなエッチなこと言っちゃダメなんだからね！！！", option = {:in_reply_to_status_id => tweet.id}) 
-                when 1..100
+                when 31..100
                     @client.update("@#{tweet.user.screen_name}\nセクハラはよくないと思います……", options = {:in_reply_to_status_id => tweet.id})
                 end
             elsif tweet.text.include?("進捗ダメ") || tweet.text.include?("進捗ありません") || tweet.text.include?("進捗ない")
