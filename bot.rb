@@ -52,7 +52,7 @@ def responseToTweet (tweet)
         if (!tweet.text.include?("@") || tweet.text.include?("@apple_chan_bot")) && tweet.user.screen_name != "apple_chan_bot"
             
             if tweet.text.include?("限何時")
-                @client.update("@#{tweet.user.screen_name}\n1限9:00-10:30\n2限10:45-12:15\n3限13:05-14:35\n4限14:50-16:20\n5限16:35-18:05\nですよ〜〜！！", options = {:in_reply_to_status_id => tweet.id})
+                @client.update("@#{tweet.user.screen_name}\n1限9:00-10:30\n2限10:45-12:15\n3限13:05-14:35\n4限14:50-16:20\n5限16:35-18:05\n6限18:15~19:45\n7限19:55~21:25ですよ〜〜！！", options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.text.include?("食堂何時")
                 @client.update("@#{tweet.user.screen_name}\n専修の生田キャンパスの食堂の営業時間です！\nhttp://pic.twitter.com/rVjDU4cODv", options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.text.include?("ば終わ") || tweet.text.include?("バおわ")||tweet.text.include?("バオワ")||tweet.text.include?("ばおわ")
@@ -93,7 +93,14 @@ def responseToTweet (tweet)
             elsif tweet.text.include?("頑張る") || tweet.text.include?("がんばる")
                 @client.update("@#{tweet.user.screen_name}\nがんばれ！！ファイトーーー！！", options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.text.include?("ちんちん") || tweet.text.include?("おっぱい") || tweet.text.include?("ちんこ") || tweet.text.include?("まんこ")
-                @client.update("@#{tweet.user.screen_name}\nセクハラはよくないと思います……", options = {:in_reply_to_status_id => tweet.id})
+                random = Random.new()
+                num = random.rand(0..100)
+                case num
+                when 0
+                    @client.update("@#{tweet.user.screen_name}\nそ、そんなエッチなこと言っちゃダメなんだからね！！！", option = {:in_reply_to_status_id => tweet.id}) 
+                when 1..100
+                    @client.update("@#{tweet.user.screen_name}\nセクハラはよくないと思います……", options = {:in_reply_to_status_id => tweet.id})
+                end
             elsif tweet.text.include?("進捗ダメ") || tweet.text.include?("進捗ありません") || tweet.text.include?("進捗ない")
                 @client.update("@#{tweet.user.screen_name}\n明日は進捗出るよ！頑張って！！", options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.text.include?("バ行")
@@ -101,6 +108,7 @@ def responseToTweet (tweet)
             elsif tweet.text.include?("課題終わった")|| tweet.text.include?("課題おわった")
                 @client.update("@#{tweet.user.screen_name}\nおつかれさま！！今日はゆっくり寝よう〜〜！", options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.text.include?("りんごちゃん")
+                @client.favorite(tweet, options={})
                 @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.in_reply_to_user_id == @my_id
                 @client.favorite(tweet, options={})
