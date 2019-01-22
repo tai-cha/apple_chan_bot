@@ -136,25 +136,21 @@ def homeTimeline_REST
         @last_tweet_id << chunk
     end
     @last_tweet_id = @last_tweet_id.to_i
-    begin
-        tl_tweets= @client.home_timeline(count: 200, since_id: @last_tweet_id.to_i)
-        tl_tweets.reverse.each_with_index do |tweet, index|
-            if index == tl_tweets.size - 1
-                @last_tweet_id = tweet.id
-            end
-            responseToTweet(tweet)
+    tl_tweets= @client.home_timeline(count: 200, since_id: @last_tweet_id.to_i)
+    tl_tweets.reverse.each_with_index do |tweet, index|
+        if index == tl_tweets.size - 1
+            @last_tweet_id = tweet.id
         end
-
-        @dropbox_client.upload(
-            sprintf("%s","/apple_chan_bot/last_tweet_id.txt"),
-            @last_tweet_id.to_s,
-            :mode =>:overwrite
-        )
-    rescue
+        responseToTweet(tweet)
     end
+
+    @dropbox_client.upload(
+        sprintf("%s","/apple_chan_bot/last_tweet_id.txt"),
+        @last_tweet_id.to_s,
+        :mode =>:overwrite
+    )
     sleep(60)
-    @followers = @client.follower_ids(MY_ID).take(7500)
-    
+    @followers = @client.follower_ids(MY_ID).take(7500)    
 end
 
 loop do
