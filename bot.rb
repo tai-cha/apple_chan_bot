@@ -1,5 +1,10 @@
 require 'twitter'
 require 'dropbox_api'
+require 'net/http'
+require 'uri'
+require 'json'
+require 'time'
+require 'date'
 
 @my_id = 1004213238379130880
 
@@ -40,6 +45,17 @@ end
 def randomWordsWhenThanks
     str = ["どういたしまして！！", "えへへ...", "天才なので", "こちらこそ！！！", "うれしい！！！！"]
     return randomFromArray(strs)
+end
+
+def weather_yokohama
+    uri = URI.parse('http://weather.livedoor.com/forecast/webservice/json/v1?city=140010')
+    json = Net::HTTP.get(uri)
+    result = JSON.parse(json)
+    today_telop = result['forecasts'][0]['telop']
+    tomorrow_telop = result['forecasts'][1]['telop']
+    min_temp = result['forecasts'][1]['temperature']['min']['celsius']
+    max_temp = result['forecasts'][1]['temperature']['max']['celsius']
+    return "今日の神奈川県（横浜）の天気は#{today_telop}だよ！\n最低気温は#{min_temp}℃、最高気温は#{max_temp}℃だよ！\n明日の天気は#{tomorrow_telop}だって！！！"
 end
 
 def responseToTweet (tweet)
@@ -109,7 +125,9 @@ def responseToTweet (tweet)
                 @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.in_reply_to_user_id == @my_id
                 @client.favorite(tweet, options={})
-                if tweet.text.include?("好き")||tweet.text.include?("すき")
+                if tweet.text.include?("天気")
+                    @client.update("@#{tweet.user.screen_name}\n#{weather_yokohama}", options = {:in_reply_to_status_id => tweet.id})
+                elsif tweet.text.include?("好き")||tweet.text.include?("すき")
                     @client.update("@#{tweet.user.screen_name}\n"+randomWordsLike, options = {:in_reply_to_status_id => tweet.id})
                 elsif tweet.text.include?("ありがと")
                     @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenThanks, options = {:in_reply_to_status_id => tweet.id})
