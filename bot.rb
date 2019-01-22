@@ -150,7 +150,27 @@ def homeTimeline_REST
         :mode =>:overwrite
     )
     sleep(60)
-    @followers = @client.follower_ids(MY_ID).take(7500)    
+    checkFollowers
+end
+
+def checkFollowers
+    current_followers = @client.follower_ids(MY_ID).take(7500)
+    older_followers = ""
+    last_tweet_id_file = @dropbox_client.download "/apple_chan_bot/followers.txt" do |chunk|
+        older_followers << chunk
+    end
+    older_followers = older_followers.gsub("[","").gsub("]","").split(", ").map(&:to_i)
+    newFollowers = current_followers - older_followers
+    unFollowed = older_followers - current_followers
+
+    @client.follow(newFollowers)
+    @client.unfollow(unFollowed)
+
+    @dropbox_client.upload(
+        sprintf("%s","/apple_chan_bot/followers.txt"),
+        currentFollowers.to_s,
+        :mode =>:overwrite
+    )
 end
 
 loop do
