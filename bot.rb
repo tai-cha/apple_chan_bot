@@ -120,6 +120,9 @@ def responseToTweet (tweet)
                 @client.update("@#{tweet.user.screen_name}\nバイト頑張ってください！", options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.text.include?("課題終わった")|| tweet.text.include?("課題おわった")
                 @client.update("@#{tweet.user.screen_name}\nおつかれさま！！今日はゆっくり寝よう〜〜！", options = {:in_reply_to_status_id => tweet.id})
+            elsif tweet.text.include?("りんごちゃん") && tweet.text.include?("お前もそう思うだろ")
+                @client.favorite(tweet, options={})
+                @client.update("@#{tweet.user.screen_name}\n"+そうなのだ！！！, options = {:in_reply_to_status_id => tweet.id})
             elsif tweet.text.include?("りんごちゃん")
                 @client.favorite(tweet, options={})
                 @client.update("@#{tweet.user.screen_name}\n"+randomWordsWhenCalled, options = {:in_reply_to_status_id => tweet.id})
@@ -155,10 +158,7 @@ def homeTimeline_REST
             end
             responseToTweet(tweet)
         end
-        File.open('last_tweet_id.txt',"w") do |file|
-            file.print(@last_tweet_id.to_s)
-            file.close
-        end
+
         @dropbox_client.upload(
             sprintf("%s","/apple_chan_bot/last_tweet_id.txt"),
             @last_tweet_id.to_s,
