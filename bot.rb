@@ -168,7 +168,7 @@ def checkFollowers
 
     @dropbox_client.upload(
         sprintf("%s","/apple_chan_bot/followers.txt"),
-        currentFollowers.to_s,
+        current_followers.to_s,
         :mode =>:overwrite
     )
 end
