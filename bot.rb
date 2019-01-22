@@ -6,7 +6,7 @@ require 'json'
 require 'time'
 require 'date'
 
-MY_ID = ENV['MY_ID'] #りんごちゃん 1004213238379130880
+MY_ID = ENV['MY_ID'].to_i
 
 @client = Twitter::REST::Client.new do |config|
     config.consumer_key        = ENV['TWITTER_CK']
