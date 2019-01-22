@@ -9,6 +9,8 @@ require 'twitter'
     config.access_token_secret = "0SWuWZjTK0xsaKF8rvEAduwlsJlyzcpvWHqYgp8Y1zYnU"
 end
 
+@dropbox_client = DropboxApi::Client.new(ENV['DROPBOX_ACCESS_TOKEN'])
+
 def randomFromArray(array)
     random = Random.new()
     return array[random.rand(0..(array.length - 1))]
@@ -40,7 +42,6 @@ def randomWordsWhenThanks
 end
 
 def responseToTweet (tweet)
-    ENV['LAST_TWEET_ID'] = tweet.id.to_s
     if !tweet.retweeted? && !tweet.text.include?("RT @")
         puts "\e[33m" + tweet.user.name + "\e[32m" + "[ID:" + tweet.user.screen_name + "]"
         puts "\e[0m" + tweet.text
@@ -122,13 +123,28 @@ def responseToTweet (tweet)
 end
 
 def homeTimeline_REST
-    tl_tweets= @client.home_timeline(count: 200,since_id: ENV['LAST_TWEET_ID'].to_i )
+    @last_tweet_id = "";
+    @last_tweet_id_file = @dropbox_client.download "/apple_chan_bot/last_tweet_id.txt" do |chunk|
+        @last_tweet_id << chunk
+    end
+    @last_tweet_id = @last_tweet_id.to_i
+
+    tl_tweets= @client.home_timeline(count: 200, since_id: @last_tweet_id.to_i)
     tl_tweets.reverse.each_with_index do |tweet, index|
         if index == tl_tweets.size - 1
-            ENV['LAST_TWEET_ID'] = tweet.id.to_s
+            @last_tweet_id = tweet.id
         end
         responseToTweet(tweet)
     end
+    File.open('last_tweet_id.txt',"w") do |file|
+        file.print(@last_tweet_id.to_s)
+        file.close
+    end
+    @dropbox_client.upload(
+        sprintf("%s","/apple_chan_bot/last_tweet_id.txt"),
+        @last_tweet_id.to_s,
+        :mode =>:overwrite
+    )
     sleep(60)
     @followers = @client.follower_ids(@my_id).take(7500)
     
