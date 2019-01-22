@@ -41,7 +41,8 @@ def weather_yokohama
     tomorrow_telop = result['forecasts'][1]['telop']
     min_temp = result['forecasts'][0]['temperature']['min']['celsius']
     max_temp = result['forecasts'][0]['temperature']['max']['celsius']
-    return "今日の神奈川県（横浜）の天気は#{today_telop}だよ！\n最低気温は#{min_temp}℃、最高気温は#{max_temp}℃だよ！\n明日の天気は#{tomorrow_telop}だって！！！"
+    date = result['forecasts'][0]['date']
+    return "#{date}\n今日の神奈川県（横浜）の天気は#{today_telop}だよ！\n最低気温は#{min_temp}℃、最高気温は#{max_temp}℃だよ！\n明日の天気は#{tomorrow_telop}だって！！！"
 end
 
 def responseToTweet (tweet)
