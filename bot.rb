@@ -142,13 +142,12 @@ def responseToTweet (tweet)
 end
 
 def homeTimeline_REST
+    @last_tweet_id = "";
+    @last_tweet_id_file = @dropbox_client.download "/apple_chan_bot/last_tweet_id.txt" do |chunk|
+        @last_tweet_id << chunk
+    end
+    @last_tweet_id = @last_tweet_id.to_i
     begin
-        @last_tweet_id = "";
-        @last_tweet_id_file = @dropbox_client.download "/apple_chan_bot/last_tweet_id.txt" do |chunk|
-            @last_tweet_id << chunk
-        end
-        @last_tweet_id = @last_tweet_id.to_i
-
         tl_tweets= @client.home_timeline(count: 200, since_id: @last_tweet_id.to_i)
         tl_tweets.reverse.each_with_index do |tweet, index|
             if index == tl_tweets.size - 1
