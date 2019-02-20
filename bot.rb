@@ -154,8 +154,6 @@ def homeTimeline_REST
         @last_tweet_id.to_s,
         :mode =>:overwrite
     )
-    sleep(60)
-    checkFollowers
 end
 
 def checkFollowers
@@ -176,8 +174,4 @@ def checkFollowers
         current_followers.to_s,
         :mode =>:overwrite
     )
-end
-
-loop do
-    homeTimeline_REST
 end
